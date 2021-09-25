@@ -12,10 +12,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageButton btn = findViewById(R.id.bottom);
-        btn.setOnClickListener((vw) -> {
-            int width = btn.getWidth();
-            int height = btn.getHeight();
+        ImageButton imgbtn = findViewById(R.id.myimagebutton);
+        imgbtn.setOnClickListener((vw) -> {
+            int width = imgbtn.getWidth();
+            int height = imgbtn.getHeight();
         });
 
     }
