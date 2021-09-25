@@ -20,11 +20,10 @@
         android:id="@+id/mybutton" />
 
     <EditText
+        android:id="@+id/myedittext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/myedittext"
-        android:text="@string/editmessage"
-        android:hint="@string/hinttext"/>
+        android:text="@string/editmessage" />
 
 </LinearLayout>
 
