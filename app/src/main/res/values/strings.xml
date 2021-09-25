@@ -2,6 +2,8 @@
     <string name="app_name">Ekaterina\'s Android Labs</string>
     <string name="hello_message">Hello world!</string>
     <string name="button_message">I\'m a button</string>
-    <string name="editmessage">I\'m an EditText</string>
-    <string name="hinttext">Write something here</string>
+    <string name="checkBox_message">Do you like icecream?</string>
+    <string name="switch_message">Do you believe in Santa?</string>
+    <string name="radioButton_message">Are you a picky eater?</string>
+
 </resources>

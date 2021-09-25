@@ -4,8 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -15,16 +19,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView mytext = findViewById(R.id.textview);
+        CheckBox cb = findViewById(R.id.check);
 
 
-        EditText myedit = findViewById(R.id.myedittext);
-        String editString = myedit.getText().toString();
-        mytext.setText("Your edit text has:" + editString);
+        RadioButton radio = findViewById(R.id.radio);
+        Switch sw = findViewById(R.id.sw);
 
-        Button btn = findViewById(R.id.mybutton);
-        btn.setOnClickListener( ( vw ) ->
-        { mytext.setText("Your edit text has: " + myedit.getText().toString());});
+        sw.setOnCheckedChangeListener(( btn, onOrOff) -> {
+            radio.setChecked(onOrOff);
+
+            Toast.makeText(MainActivity.this, "You clicked on switch", Toast.LENGTH_LONG);
+        });
+
+        cb.setOnCheckedChangeListener((b, c) -> {
+            Toast.makeText(MainActivity.this, "You clicked on checkbox", Toast.LENGTH_LONG);
+            if(c)
+                radio.setChecked(true);
+            else
+                radio.setChecked(false);
+        });
+
+
 
     }
+
 }
