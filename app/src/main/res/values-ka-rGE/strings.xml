@@ -3,4 +3,7 @@
     <string name="app_name">Ekaterina\'s Android Labs</string>
     <string name="hello_message">გამარჯობა მსოფლიო!</string>
     <string name="button_message">მე ვარ ღილაკი</string>
+    <string name="button1">ღილაკი 1</string>
+    <string name="button2">ღილაკი 2</string>
+    <string name="button3">ღილაკი 3</string>
 </resources>
