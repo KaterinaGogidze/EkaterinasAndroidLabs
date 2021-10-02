@@ -5,8 +5,11 @@
         <item name="colorPrimary">@color/my_primary</item>
 
 
+
+
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/my_secondary</item>
+
 
 
         <!-- Status bar color. -->
