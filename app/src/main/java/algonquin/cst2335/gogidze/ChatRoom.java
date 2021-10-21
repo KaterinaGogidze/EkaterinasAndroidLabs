@@ -1,18 +1,29 @@
 package algonquin.cst2335.gogidze;
 
 import android.os.Bundle;
+import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class ChatRoom extends AppCompatActivity {
 
+    Button send;
+    EditText edit;
     RecyclerView chatList;
+    ArrayList<ChatMessage> messages = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,17 +31,48 @@ public class ChatRoom extends AppCompatActivity {
         setContentView(R.layout.chatlayout);
         chatList = findViewById(R.id.myrecycler);
         chatList.setAdapter(new MyChatAdapter());
+        send = findViewById(R.id.sendButton);
+        edit = findViewById(R.id.editText);
+
+        send.setOnClickListener( click -> {
+            String whatIsTyped = edit.getText().toString();
+            Date timeNow = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+            String currentDateandTime = sdf.format(timeNow);
+
+
+
+            edit.setText("");
+        });
+    }
+    private class MyRowViews extends RecyclerView.ViewHolder {
+
+        TextView messageText;
+        TextView timeText;
+
+        public MyRowViews(View itemView) {
+            super(itemView);
+
+            messageText = itemView.findViewById(R.id.message);
+            timeText = itemView.findViewById(R.id.time);
+        }
     }
 
-    private class MyChatAdapter extends RecyclerView.Adapter {
+    private class MyChatAdapter extends RecyclerView.Adapter<MyRowViews> {
 
             @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return null;
+            public MyRowViews onCreateViewHolder(ViewGroup parent, int viewType) {
+
+                LayoutInflater inflater = getLayoutInflater();
+                View loadedRow = inflater.inflate(R.layout.sent_message, parent, false);
+                MyRowViews initRow = new MyRowViews(loadedRow);
+                return  initRow;
             }
 
             @Override
-            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            public void onBindViewHolder(MyRowViews holder, int position) {
+                holder.messageText.setText(messages.get(position).getMessage());
+                holder.timeText.setText(messages.get(position).getTimeSent());
 
             }
 
@@ -43,9 +85,10 @@ public class ChatRoom extends AppCompatActivity {
     private class ChatMessage {
         String message;
         int sendOrReceive;
-        Date timeSent;
+        String timeSent;
 
-        public ChatMessage(String message, int sendOrReceive, Date timeSent) {
+
+        public ChatMessage(String message, int sendOrReceive, String timeSent) {
             this.message = message;
             this.sendOrReceive = sendOrReceive;
             this.timeSent = timeSent;
@@ -59,7 +102,7 @@ public class ChatRoom extends AppCompatActivity {
             return sendOrReceive;
         }
 
-        public Date getTimeSent() {
+        public String getTimeSent() {
             return timeSent;
         }
     }
