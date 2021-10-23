@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
@@ -23,6 +24,8 @@ public class ChatRoom extends AppCompatActivity {
     EditText edit;
     RecyclerView chatList;
     ArrayList<ChatMessage> messages = new ArrayList<>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +41,16 @@ public class ChatRoom extends AppCompatActivity {
             String whatIsTyped = edit.getText().toString();
             Date timeNow = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
-            String currentDateandTime = sdf.format(timeNow);
+            String currentDateandTime = sdf.format(new Date());
 
 
-
+            messages.add(currentDateandTime, whatIsTyped);
             edit.setText("");
+
+            MyChatAdapter adt = new MyChatAdapter();
+            chatList.setAdapter(adt);
+            chatList.setLayoutManager(new LinearLayoutManager(this));
+            adt.notifyItemChanged(messages.size() - 1);
         });
     }
     private class MyRowViews extends RecyclerView.ViewHolder {
@@ -60,25 +68,47 @@ public class ChatRoom extends AppCompatActivity {
 
     private class MyChatAdapter extends RecyclerView.Adapter<MyRowViews> {
 
+
+
             @Override
             public MyRowViews onCreateViewHolder(ViewGroup parent, int viewType) {
 
                 LayoutInflater inflater = getLayoutInflater();
+                int layoutID;
+                if(viewType == 1)  //Send
+                    layoutID = R.layout.sent_message;
+                else  //Receive
+                    layoutID = R.layout.receive_message;
                 View loadedRow = inflater.inflate(R.layout.sent_message, parent, false);
                 MyRowViews initRow = new MyRowViews(loadedRow);
+
+
+
                 return  initRow;
             }
 
             @Override
             public void onBindViewHolder(MyRowViews holder, int position) {
-                holder.messageText.setText(messages.get(position).getMessage());
-                holder.timeText.setText(messages.get(position).getTimeSent());
 
+
+                ChatMessage thisMessage = messages.get(position);
+
+
+                holder.messageText.setText(thisMessage.getMessage());
+                holder.timeText.setText(thisMessage.getTimeSent());
+
+            }
+
+            public int getItemViewType(int position) {
+
+                ChatMessage thisRow = messages.get(position);
+
+                return 5;
             }
 
             @Override
             public int getItemCount() {
-                return 0;
+                return messages.size();
             }
     }
 
