@@ -9,9 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,8 +24,10 @@ import java.util.Locale;
 public class ChatRoom extends AppCompatActivity {
 
     Button send;
+    Button receive;
     EditText edit;
     RecyclerView chatList;
+    MyChatAdapter adt;
     ArrayList<ChatMessage> messages = new ArrayList<>();
 
 
@@ -35,6 +40,7 @@ public class ChatRoom extends AppCompatActivity {
         chatList = findViewById(R.id.myrecycler);
         chatList.setAdapter(new MyChatAdapter());
         send = findViewById(R.id.sendButton);
+        receive = findViewById(R.id.receiveButton);
         edit = findViewById(R.id.editText);
 
         send.setOnClickListener( click -> {
@@ -44,10 +50,10 @@ public class ChatRoom extends AppCompatActivity {
             String currentDateandTime = sdf.format(new Date());
 
 
-            messages.add(currentDateandTime, whatIsTyped);
+            messages.add( new ChatMessage(whatIsTyped, 0, currentDateandTime));
             edit.setText("");
 
-            MyChatAdapter adt = new MyChatAdapter();
+            adt = new MyChatAdapter();
             chatList.setAdapter(adt);
             chatList.setLayoutManager(new LinearLayoutManager(this));
             adt.notifyItemChanged(messages.size() - 1);
@@ -60,6 +66,36 @@ public class ChatRoom extends AppCompatActivity {
 
         public MyRowViews(View itemView) {
             super(itemView);
+
+            itemView.setOnClickListener( click -> {
+                int position = getAdapterPosition();
+                ChatMessage whatClicked = messages.get(position);
+
+                MyRowViews newRow = adt.onCreateViewHolder(null, adt.getItemViewType(position));
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoom.this);
+
+                builder.setMessage("Do you want to delete this message " + whatClicked.getMessage());
+                builder.setTitle("Question: ");
+
+                builder.setNegativeButton("No", (dialog, cl) -> {});
+                builder.setPositiveButton("Yes", (dialog, cl) -> {
+                    messages.remove(position);
+                    adt.notifyItemRemoved(position);
+
+                    Snackbar.make(messageText, "You deleted message # "+ position, Snackbar.LENGTH_LONG)
+                            .setAction("Undo", clk -> {
+
+                                messages.add(position, whatClicked);
+                                adt.notifyItemInserted(position);
+                            })
+                            .show();
+
+
+
+                })
+                .create().show();
+            });
 
             messageText = itemView.findViewById(R.id.message);
             timeText = itemView.findViewById(R.id.time);
@@ -91,6 +127,7 @@ public class ChatRoom extends AppCompatActivity {
             public void onBindViewHolder(MyRowViews holder, int position) {
 
 
+
                 ChatMessage thisMessage = messages.get(position);
 
 
@@ -101,7 +138,7 @@ public class ChatRoom extends AppCompatActivity {
 
             public int getItemViewType(int position) {
 
-                ChatMessage thisRow = messages.get(position);
+
 
                 return 5;
             }
