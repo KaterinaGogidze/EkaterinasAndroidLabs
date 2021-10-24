@@ -16,7 +16,8 @@
             android:name=".SecondActivity"
             android:exported="true" />
         <activity
-            android:name=".ChatRoom">
+            android:name=".ChatRoom"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
