@@ -32,6 +32,7 @@ public class ChatRoom extends AppCompatActivity {
     RecyclerView chatList;
     MyChatAdapter adt;
     ArrayList<ChatMessage> messages = new ArrayList<>();
+    SQLiteDatabase db;
 
 
 
@@ -142,12 +143,12 @@ public class ChatRoom extends AppCompatActivity {
 
             itemView.setOnClickListener( click -> {
                 int position = getAbsoluteAdapterPosition();
-                ChatMessage whatClicked = messages.get(position);
+                ChatMessage removedMessage = messages.get(position);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoom.this);
 
                 builder.setTitle("Question:")
-                    .setMessage("Do you want to delete this message " + whatClicked.getMessage())
+                    .setMessage("Do you want to delete this message " + removedMessage.getMessage())
                     .setNegativeButton("No", (dialog, cl1) -> {})
                     .setPositiveButton("Yes", (dialog, cl2) -> {
                     messages.remove(position);
@@ -156,10 +157,20 @@ public class ChatRoom extends AppCompatActivity {
                     Snackbar.make(messageText, "You deleted message # "+ position, Snackbar.LENGTH_LONG)
                             .setAction("Undo", clk -> {
 
-                                messages.add(position, whatClicked);
+                                messages.add(position, removedMessage);
                                 adt.notifyItemInserted(position);
+
+                                // reinsert into the Database
+                                db.execSQL("Insert into " + MyOpenHelper.TABLE_NAME + "values('" + removedMessage.getId()
+                            + "','" + removedMessage.getMessage() +
+                              "','" + removedMessage.getSendOrReceive() +
+                              "','" + removedMessage.getTimeSent() + "');");
                             })
                             .show();
+
+                    // Delete from Database: returns number of rows deleted
+                    db.delete(MyOpenHelper.TABLE_NAME, "_id=?", new String[] { Long.toString(removedMessage.getId())});
+
 
 
 
