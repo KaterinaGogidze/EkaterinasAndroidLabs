@@ -68,18 +68,15 @@ public class ChatRoom extends AppCompatActivity {
             super(itemView);
 
             itemView.setOnClickListener( click -> {
-                int position = getAdapterPosition();
+                int position = getAbsoluteAdapterPosition();
                 ChatMessage whatClicked = messages.get(position);
-
-                MyRowViews newRow = adt.onCreateViewHolder(null, adt.getItemViewType(position));
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoom.this);
 
-                builder.setMessage("Do you want to delete this message " + whatClicked.getMessage());
-                builder.setTitle("Question: ");
-
-                builder.setNegativeButton("No", (dialog, cl) -> {});
-                builder.setPositiveButton("Yes", (dialog, cl) -> {
+                builder.setTitle("Question:")
+                    .setMessage("Do you want to delete this message " + whatClicked.getMessage())
+                    .setNegativeButton("No", (dialog, cl1) -> {})
+                    .setPositiveButton("Yes", (dialog, cl2) -> {
                     messages.remove(position);
                     adt.notifyItemRemoved(position);
 
