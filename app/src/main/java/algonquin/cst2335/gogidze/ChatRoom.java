@@ -35,13 +35,15 @@ public class ChatRoom extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.chatlayout);
+
         chatList = findViewById(R.id.myrecycler);
         chatList.setAdapter(new MyChatAdapter());
         send = findViewById(R.id.sendButton);
         receive = findViewById(R.id.receiveButton);
         edit = findViewById(R.id.editText);
+
+        MyOpenHelper opener = new MyOpenHelper();
 
         send.setOnClickListener( click -> {
             String whatIsTyped = edit.getText().toString();
