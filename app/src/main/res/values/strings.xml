@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Ekaterina\'s Android Labs</string>
-    <string name="hello_message">Type your Password:</string>
-    <string name="button_message">Login</string>
+    <string name="hello_message">Type in the name of a city:</string>
+    <string name="button_message">Get Forecast</string>
 </resources>
