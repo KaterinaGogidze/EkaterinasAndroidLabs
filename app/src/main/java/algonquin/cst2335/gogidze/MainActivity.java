@@ -1,18 +1,28 @@
 package algonquin.cst2335.gogidze;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,13 +56,16 @@ public class MainActivity extends AppCompatActivity {
     TextView tv = null;
 
     /** This holds the password text at the centre of the screen */
-    EditText cityText = null;
+    EditText cityTextField;
 
     /** This holds the Login button  at the button of the screen */
     Button forecastBtn = null;
     private String stringUrl;
     Bitmap image;
-
+    float oldSize = 14.0f;
+    Toolbar myToolbar;
+    TextView maxTemp, minTemp, temp, humidity,  description;
+    ImageView icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +73,46 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         tv = findViewById(R.id.textView);
-        cityText = findViewById(R.id.cityTextField);
+        cityTextField = findViewById(R.id.cityTextField);
         forecastBtn = findViewById(R.id.forecastButton);
+        myToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        maxTemp = findViewById(R.id.maxTemp);
+        minTemp = findViewById(R.id.minTemp);
+        humidity = findViewById(R.id.humidity);
+        description = findViewById(R.id.description);
+        icon = findViewById(R.id.icon);
+
+        setSupportActionBar(myToolbar);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, myToolbar, R.string.open, R.string.close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.popout_menu);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+
+                switch(item.getItemId()) {
+
+                }
+                return false;
+            }
+        });
+
+        navigationView.setNavigationItemSelectedListener( (item) -> {
+
+            onOptionsItemSelected(item); //call the function for the other Toolbar
+            drawer.closeDrawer(GravityCompat.START);
+            return false;
+        });
+
+
 
         forecastBtn.setOnClickListener( clk -> {
-            String cityName = cityText.getText().toString();
+           String cityName = cityTextField.getText().toString();
+
             Executor newTread = Executors.newSingleThreadExecutor();
 
 
@@ -93,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
                     double min = mainObject.getDouble("temp_min");
                     int Humitidy = mainObject.getInt("humidity");
 
+
                 runOnUiThread( ( ) -> {
                     TextView tv = findViewById(R.id.temp);
                     tv.setText("The current temperature is " + current);
@@ -106,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                     tv.setText("The max temperature is " + current);
                     tv.setVisibility(View.VISIBLE);
 
-                    tv = findViewById(R.id.humitidy);
+                    tv = findViewById(R.id.humidity);
                     tv.setText("The humidity is " + current);
                     tv.setVisibility(View.VISIBLE);
 
@@ -161,6 +210,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_actions, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
 
@@ -232,5 +290,42 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return false;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.hide_views:
+             temp.setVisibility(View.INVISIBLE);
+             maxTemp.setVisibility(View.INVISIBLE);
+             minTemp.setVisibility(View.INVISIBLE);
+             humidity.setVisibility(View.INVISIBLE);
+             description.setVisibility(View.INVISIBLE);
+             icon.setVisibility(View.INVISIBLE);
+             cityTextField.setText(""); // clear the city name0
+                break;
+
+            case R.id.id_increase:
+                oldSize++;
+                temp.setTextSize(oldSize);
+                minTemp.setTextSize(oldSize);
+                maxTemp.setTextSize(oldSize);
+                humidity.setTextSize(oldSize);
+                description.setTextSize(oldSize);
+                cityTextField.setTextSize(oldSize);
+                break;
+            case R.id.id_decrease:
+                oldSize = Float.max(oldSize -1, 5);
+                temp.setTextSize(oldSize);
+                minTemp.setTextSize(oldSize);
+                maxTemp.setTextSize(oldSize);
+                humidity.setTextSize(oldSize);
+                description.setTextSize(oldSize);
+                cityTextField.setTextSize(oldSize);
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
