@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         maxTemp = findViewById(R.id.maxTemp);
         minTemp = findViewById(R.id.minTemp);
-        humidity = findViewById(R.id.humidity);
+//        humidity = findViewById(R.id.humidity);
         description = findViewById(R.id.description);
         icon = findViewById(R.id.icon);
 
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                     tv.setText("The max temperature is " + current);
                     tv.setVisibility(View.VISIBLE);
 
-                    tv = findViewById(R.id.humidity);
+//                    tv = findViewById(R.id.humidity);
                     tv.setText("The humidity is " + current);
                     tv.setVisibility(View.VISIBLE);
 
